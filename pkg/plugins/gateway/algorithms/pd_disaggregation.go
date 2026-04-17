@@ -342,6 +342,9 @@ func (r *pdRouter) Route(ctx *types.RoutingContext, readyPodList types.PodList) 
 		}
 		metrics.EmitMetricToPrometheus(ctx, nil, metrics.GatewayPrefillRequestSuccessTotal, &metrics.SimpleMetricValue{Value: 1.0},
 			map[string]string{"status": pdRoutePrefillRequestSuccess, "status_code": "200"})
+		if ctx.ImmediateResponse != nil {
+			return "", nil
+		}
 	}
 
 	ctx.SetTargetPod(decodePod)
@@ -880,7 +883,7 @@ func (r *pdRouter) doPrefillRequest(routingCtx *types.RoutingContext, prefillPod
 		go func() {
 			defer r.prefillRequestTracker.RemovePrefillRequest(routingCtx.RequestID)
 
-			if _, err := r.executeHTTPRequest(apiURL, routingCtx, payload); err != nil {
+			if _, _, err := r.executeHTTPRequest(apiURL, routingCtx, payload); err != nil {
 				klog.ErrorS(err, "prefill_request_failed",
 					"request_id", routingCtx.RequestID,
 					"llm_engine", llmEngine,
@@ -927,7 +930,7 @@ func (r *pdRouter) handleSyncPrefill(
 	errorContext string) error {
 	defer r.prefillRequestTracker.RemovePrefillRequest(routingCtx.RequestID)
 
-	responseData, err := r.executeHTTPRequest(apiURL, routingCtx, payload)
+	responseData, responseBody, err := r.executeHTTPRequest(apiURL, routingCtx, payload)
 	if err != nil {
 		klog.ErrorS(err, "prefill_request_failed",
 			"request_id", routingCtx.RequestID,
@@ -936,6 +939,21 @@ func (r *pdRouter) handleSyncPrefill(
 			"prefill_pod_ip", prefillPod.Status.PodIP,
 			"elapsed", routingCtx.Elapsed(time.Now()))
 		return fmt.Errorf("prefill request failed for request %s, pod %s: %w", routingCtx.RequestID, prefillPod.Name, err)
+	}
+
+	if isPrefillResponseComplete(llmEngine, routingCtx.Stream, responseData) {
+		routingCtx.ImmediateResponse = &types.ImmediateHTTPResponse{
+			StatusCode: http.StatusOK,
+			Headers: map[string]string{
+				"Content-Type": "application/json",
+			},
+			Body: responseBody,
+		}
+		routingCtx.PrefillEndTime = time.Now()
+		klog.InfoS("prefill_complete_skip_decode",
+			"request_id", routingCtx.RequestID,
+			"prefill_time_taken", routingCtx.PrefillEndTime.Sub(routingCtx.PrefillStartTime))
+		return nil
 	}
 
 	if updateCtxFunc != nil {
@@ -1008,14 +1026,14 @@ func (r *pdRouter) preparePrefillPayload(routingCtx *types.RoutingContext, pod *
 	return sonic.Marshal(completionRequest)
 }
 
-func (r *pdRouter) executeHTTPRequest(url string, routingCtx *types.RoutingContext, payload []byte) (map[string]any, error) {
+func (r *pdRouter) executeHTTPRequest(url string, routingCtx *types.RoutingContext, payload []byte) (map[string]any, []byte, error) {
 	// Create request with context for cancellation support
 	ctx, cancel := context.WithTimeout(routingCtx.Context, time.Duration(prefillRequestTimeout)*time.Second)
 	defer cancel()
 
 	req, err := http.NewRequestWithContext(ctx, "POST", url, bytes.NewBuffer(payload))
 	if err != nil {
-		return nil, fmt.Errorf("failed to create http prefill request: %w", err)
+		return nil, nil, fmt.Errorf("failed to create http prefill request: %w", err)
 	}
 
 	// Set headers
@@ -1031,7 +1049,7 @@ func (r *pdRouter) executeHTTPRequest(url string, routingCtx *types.RoutingConte
 		status, code := metrics.HttpFailureStatusCode(ctx, err, nil)
 		metrics.EmitMetricToPrometheus(routingCtx, nil, metrics.GatewayPrefillRequestFailTotal, &metrics.SimpleMetricValue{Value: 1.0},
 			map[string]string{"status": status, "status_code": code})
-		return nil, fmt.Errorf("failed to execute http prefill request: %w", err)
+		return nil, nil, fmt.Errorf("failed to execute http prefill request: %w", err)
 	}
 	defer func() {
 		_ = resp.Body.Close()
@@ -1040,7 +1058,7 @@ func (r *pdRouter) executeHTTPRequest(url string, routingCtx *types.RoutingConte
 	// Read response body
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, fmt.Errorf("failed to read prefill response body: %w", err)
+		return nil, nil, fmt.Errorf("failed to read prefill response body: %w", err)
 	}
 
 	// Check response status
@@ -1048,7 +1066,7 @@ func (r *pdRouter) executeHTTPRequest(url string, routingCtx *types.RoutingConte
 		status, code := metrics.HttpFailureStatusCode(ctx, nil, resp)
 		metrics.EmitMetricToPrometheus(routingCtx, nil, metrics.GatewayPrefillRequestFailTotal, &metrics.SimpleMetricValue{Value: 1.0},
 			map[string]string{"status": status, "status_code": code})
-		return nil, fmt.Errorf("http prefill request failed with status %d: %s", resp.StatusCode, string(body))
+		return nil, body, fmt.Errorf("http prefill request failed with status %d: %s", resp.StatusCode, string(body))
 	}
 
 	// Parse response JSON. TRT-LLM prefill returns large integer IDs in disaggregated_params; UseInt64 avoids float64 precision loss.
@@ -1060,10 +1078,31 @@ func (r *pdRouter) executeHTTPRequest(url string, routingCtx *types.RoutingConte
 		errUnmarshal = sonic.Unmarshal(body, &responseData)
 	}
 	if errUnmarshal != nil {
-		return nil, fmt.Errorf("failed to unmarshal prefill response: %w", errUnmarshal)
+		return nil, body, fmt.Errorf("failed to unmarshal prefill response: %w", errUnmarshal)
 	}
 
-	return responseData, nil
+	return responseData, body, nil
+}
+
+func isPrefillResponseComplete(llmEngine string, stream bool, responseData map[string]any) bool {
+	if llmEngine != TensorRTLLM || stream {
+		return false
+	}
+	choices, ok := responseData["choices"].([]any)
+	if !ok || len(choices) == 0 {
+		return false
+	}
+	choice, ok := choices[0].(map[string]any)
+	if !ok {
+		return false
+	}
+	finishReason, _ := choice["finish_reason"].(string)
+	switch finishReason {
+	case "stop", "content_filter", "eos_token":
+		return true
+	default:
+		return false
+	}
 }
 
 func (r *pdRouter) updateRoutingContextWithKVTransferParams(routingCtx *types.RoutingContext, responseData map[string]any, prefillPod *v1.Pod) error {

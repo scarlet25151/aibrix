@@ -1,0 +1,65 @@
+apps/console/web/src/components/CreateModelDeploymentTemplate.tsx
+  26702ff28d809177 87
+  0bdb819e79a4dfbb 104
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.3.4",
+  "base_commit_sha": "f2c2f46ddb29d6552c3c8dc16c0a87bc6aecfd3c",
+  "prompts": {
+    "0bdb819e79a4dfbb": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-e66fcae0-3734-416d-a35a-314e5a1a60b1",
+        "model": "default"
+      },
+      "human_author": "chenyu.jiang <chenyu.jiang@bytedance.com>",
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "26702ff28d809177": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-3597c241-bc5e-4b6d-8df2-64c38056e076",
+        "model": "default"
+      },
+      "human_author": null,
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 1,
+      "overriden_lines": 0
+    },
+    "67573457c7575dd6": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-dfa21f9b-2a87-491b-9a44-51066c52039f",
+        "model": "default"
+      },
+      "human_author": null,
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    },
+    "f15afc4494763047": {
+      "agent_id": {
+        "tool": "trae-cue",
+        "id": "ai_tab-icr-111cfc2d-6f40-401d-9202-b1d7ee287901",
+        "model": "default"
+      },
+      "human_author": null,
+      "messages": [],
+      "total_additions": 1,
+      "total_deletions": 1,
+      "accepted_lines": 0,
+      "overriden_lines": 0
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}

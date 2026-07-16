@@ -1,0 +1,171 @@
+apps/console/api/store/store_test.go
+  s_4a099e8ce4f739::t_6e249917712c0b 174-190,194-218
+  s_4a099e8ce4f739::t_5dbc2179c038bf 191-193
+apps/console/web/src/components/Deployments.tsx
+  s_4a099e8ce4f739::t_322830d8f55874 3,24
+apps/console/api/store/models/deployment.go
+  s_4a099e8ce4f739::t_5dbc2179c038bf 31-57,132-144
+  s_4a099e8ce4f739::t_5a3e22d98c535b 93,145
+apps/console/api/store/migrations/001_initial.sql
+  s_4a099e8ce4f739::t_74b957e8ce39ec 31
+apps/console/web/src/data/mockData.ts
+  s_4a099e8ce4f739::t_0825c1a4576d48 193,207-209
+apps/console/api/store/gorm.go
+  s_4a099e8ce4f739::t_569f4ab1792088 266,272-294
+  s_4a099e8ce4f739::t_9192ba187d3d7e 295-296
+apps/console/api/config/config.go
+  s_4a099e8ce4f739::t_b2d87b84f7be7f 38,221
+apps/console/web/src/utils/api.test.ts
+  s_4a099e8ce4f739::t_c1ba7058de4e55 89
+  s_4a099e8ce4f739::t_4c7d2967b747f0 2,52-88
+apps/console/api/handler/deployment.go
+  s_4a099e8ce4f739::t_deda551022bdb8 42-47,71-72,78-80,88,101,105-107,132-136,162,165-168,180
+  s_4a099e8ce4f739::t_720a7d78ed62e6 81-84,99-100
+  s_4a099e8ce4f739::t_9b4412bb024121 120,129-131,150-158
+  s_4a099e8ce4f739::t_f2131de67834f1 85-87
+  s_4a099e8ce4f739::t_d2b8693f1c5e1e 66
+  s_4a099e8ce4f739::t_f63cf3105b53a6 21
+  s_4a099e8ce4f739::t_d220935b6517b2 67-69,118-119
+  s_4a099e8ce4f739::t_53c72bf73eb3f4 159-160
+apps/console/api/store/store.go
+  s_4a099e8ce4f739::t_fab8ad20248c23 34
+apps/console/api/handler/deployment_test.go
+  s_4a099e8ce4f739::t_6382569646f766 1-161
+apps/console/api/gen/console/v1/console.pb.gw.go
+  s_4a099e8ce4f739::t_5dbc2179c038bf 1796-1799,1803-1806
+apps/console/web/src/utils/api.ts
+  s_4a099e8ce4f739::t_378313dd21f3d1 117-118,127
+apps/console/api/deployment/provider/provider.go
+  s_4a099e8ce4f739::t_d9c5f80782b8c1 133-136,138-141,143-152,540-543
+  s_4a099e8ce4f739::t_ad55f697da9e04 189
+  s_4a099e8ce4f739::t_15e01355744b61 202-207
+  s_4a099e8ce4f739::t_47181dfb18b665 172,175,178-182,184
+  s_4a099e8ce4f739::t_51acbebc5cf810 153
+  s_4a099e8ce4f739::t_11ea2a6e045512 544,577,579-582,600,834,836,842,846,852,857,874-877,879-880,899-913
+  s_4a099e8ce4f739::t_fcb74e1a651f14 155,162-171,173-174,176-177,183,185-186,569-571,573,607-608,610-611
+  s_4a099e8ce4f739::t_163fb8a4c1ade8 187
+  s_4a099e8ce4f739::t_bbfe5903fd9c38 1-16 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a5932a0c01cf48f5a1c7593","tool_type":"agent","tool_id":"apply_patch","line_ranges":[{"Range":[1,16]}]}]}
+  s_4a099e8ce4f739::t_2ea5a3024a3f93 22,188,572,574-576,826-833,835,837-840,845,847-850,855-856,858-873,878,881-898,914-919,950-953,955
+  s_4a099e8ce4f739::t_4420cf31fe053f 34,191,194-201,289,820
+  s_4a099e8ce4f739::t_95b151874cf82d 252-254
+  s_4a099e8ce4f739::t_ce4e1398463e09 286-288
+  s_4a099e8ce4f739::t_359bfeb11737fd 283-285
+apps/console/web/src/components/DeploymentDetail.tsx
+  s_4a099e8ce4f739::t_0170da66b59726 182-195
+  s_4a099e8ce4f739::t_0a1a60a86c4d71 3,23
+apps/console/examples/kind-console.env.example
+  s_4a099e8ce4f739::t_c485a23ef0259e 10,12-18,20
+  s_4a099e8ce4f739::t_783021e21858b8 19
+apps/console/api/proto/console/v1/console.proto
+  s_4a099e8ce4f739::t_9faeaffbd08155 69,96,105
+apps/console/web/src/components/CreateDeployment.tsx
+  s_4a099e8ce4f739::t_72b705d488e9a2 70-71
+  s_4a099e8ce4f739::t_7164430fca6d9c 2,16-20,22,28,37,47,51,53-55,68,73,78,82-84,86-88,99-100,105-110,113-114,127-128,132-133,137-138,146-149,152-167,169-170,174-176,178,180-182,184-185,188-191,193-201,206-207,211,213,230-238,240-241,243-245,247,249-251,253-255,258,261-263,265,268,270-271,273-274,278,280-285,289,291-294,297-298,301,306-310,313-314,316,319,324-332
+apps/console/api/deployment/status/status.go
+  s_4a099e8ce4f739::t_0909df9adc46d9 1-16 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a5932bec01cf48f5a1c759c","tool_type":"agent","tool_id":"apply_patch","line_ranges":[{"Range":[1,16]}]}]}
+apps/console/api/deployment/provider/provider_test.go
+  s_4a099e8ce4f739::t_b12a526834ac26 123-124,127-128
+  s_4a099e8ce4f739::t_f9170b62b20a6b 1-47,49-65,67-77,100-107,114-122,125-126,129,133-227
+  s_4a099e8ce4f739::t_4bd73768b12980 48,66,78-99,108-113,130-132
+apps/console/web/src/App.tsx
+  s_4a099e8ce4f739::t_1d73debc407c0f 111-116
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "3972dffb530cccc5def8976f23761c1f62910666",
+  "prompts": {},
+  "sessions": {
+    "s_4a099e8ce4f739": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a591e5bc01cf48f5a1c6720",
+        "model": "gpt-5.6-sol__max"
+      },
+      "human_author": null
+    }
+  },
+  "attestation_metadata": {
+    "apps/console/api/deployment/provider/provider.go": [
+      {
+        "hash": "s_4a099e8ce4f739::t_bbfe5903fd9c38",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              16
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a5932a0c01cf48f5a1c7593",
+            "tool_type": "agent",
+            "tool_id": "apply_patch",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  16
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "apps/console/api/deployment/status/status.go": [
+      {
+        "hash": "s_4a099e8ce4f739::t_0909df9adc46d9",
+        "line_ranges": [
+          {
+            "Range": [
+              1,
+              16
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a5932bec01cf48f5a1c759c",
+            "tool_type": "agent",
+            "tool_id": "apply_patch",
+            "line_ranges": [
+              {
+                "Range": [
+                  1,
+                  16
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "s_4a099e8ce4f739": {
+      "tool": "trae",
+      "conversation_id": "6a591e5bc01cf48f5a1c6720",
+      "session_id": "6a591e5bc01cf48f5a1c6720",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_4a099e8ce4f739::t_0909df9adc46d9": {
+      "tool": "trae",
+      "conversation_id": "6a591e5bc01cf48f5a1c6720",
+      "session_id": "6a591e5bc01cf48f5a1c6720",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_4a099e8ce4f739::t_bbfe5903fd9c38": {
+      "tool": "trae",
+      "conversation_id": "6a591e5bc01cf48f5a1c6720",
+      "session_id": "6a591e5bc01cf48f5a1c6720",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}

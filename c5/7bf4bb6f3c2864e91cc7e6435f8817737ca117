@@ -1,0 +1,451 @@
+python/aibrix/aibrix/batch/client/concurrency.py
+  s_cb5d281919c604::t_8a154f6e579017 87-88,112-113,129-134,141,146-151,153,162-165,172,177-181,186-188,190,194,293-294,298-321,323,325 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a582f01c01cf48f5a1c5f0d","tool_type":"agent","tool_id":"apply_patch","line_ranges":[{"Range":[87,88]},{"Range":[112,113]},{"Range":[129,134]},{"Single":141},{"Range":[146,151]},{"Single":153},{"Range":[162,165]},{"Single":172},{"Range":[177,181]},{"Range":[186,188]},{"Single":190},{"Single":194},{"Range":[293,294]},{"Range":[298,321]},{"Single":323},{"Single":325}]}]}
+python/aibrix/tests/batch/test_dispatch_engine.py
+  s_cb5d281919c604::t_4d7996dcb4c4d5 35,648-680,801-817 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a583024c01cf48f5a1c5f4c","tool_type":"agent","tool_id":"apply_patch","line_ranges":[{"Single":35},{"Range":[648,680]},{"Range":[801,817]}]}]}
+  s_cb5d281919c604::t_f39a7524dc1b61 818-819
+python/aibrix/aibrix/batch/client/engine.py
+  s_cb5d281919c604::t_76095c82f77e07 334-335,344,346,397-401,403-405,459-462 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a582f3ec01cf48f5a1c5f2a","tool_type":"agent","tool_id":"apply_patch","line_ranges":[{"Range":[334,335]},{"Single":344},{"Single":346},{"Range":[397,401]},{"Range":[403,405]},{"Range":[459,462]}]}]}
+python/aibrix/tests/batch/test_concurrency_controller.py
+  s_cb5d281919c604::t_90a087e38d258a 25-36,38-49,51-94,144-149,154-155,175,177,183 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a582f58c01cf48f5a1c5f30","tool_type":"agent","tool_id":"apply_patch","line_ranges":[{"Range":[25,36]},{"Range":[38,49]},{"Range":[51,94]},{"Range":[144,149]},{"Range":[154,155]},{"Single":175},{"Single":177},{"Single":183}]}]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "c57bf4bb6f3c2864e91cc7e6435f8817737ca117",
+  "prompts": {},
+  "sessions": {
+    "s_cb5d281919c604": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a582e81c01cf48f5a1c5ea6",
+        "model": "gpt-5.6-sol__max"
+      },
+      "human_author": "chenyu.jiang <chenyu.jiang@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {
+    "python/aibrix/aibrix/batch/client/concurrency.py": [
+      {
+        "hash": "s_cb5d281919c604::t_8a154f6e579017",
+        "line_ranges": [
+          {
+            "Range": [
+              87,
+              88
+            ]
+          },
+          {
+            "Range": [
+              112,
+              113
+            ]
+          },
+          {
+            "Range": [
+              129,
+              134
+            ]
+          },
+          {
+            "Single": 141
+          },
+          {
+            "Range": [
+              146,
+              151
+            ]
+          },
+          {
+            "Single": 153
+          },
+          {
+            "Range": [
+              162,
+              165
+            ]
+          },
+          {
+            "Single": 172
+          },
+          {
+            "Range": [
+              177,
+              181
+            ]
+          },
+          {
+            "Range": [
+              186,
+              188
+            ]
+          },
+          {
+            "Single": 190
+          },
+          {
+            "Single": 194
+          },
+          {
+            "Range": [
+              293,
+              294
+            ]
+          },
+          {
+            "Range": [
+              298,
+              321
+            ]
+          },
+          {
+            "Single": 323
+          },
+          {
+            "Single": 325
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a582f01c01cf48f5a1c5f0d",
+            "tool_type": "agent",
+            "tool_id": "apply_patch",
+            "line_ranges": [
+              {
+                "Range": [
+                  87,
+                  88
+                ]
+              },
+              {
+                "Range": [
+                  112,
+                  113
+                ]
+              },
+              {
+                "Range": [
+                  129,
+                  134
+                ]
+              },
+              {
+                "Single": 141
+              },
+              {
+                "Range": [
+                  146,
+                  151
+                ]
+              },
+              {
+                "Single": 153
+              },
+              {
+                "Range": [
+                  162,
+                  165
+                ]
+              },
+              {
+                "Single": 172
+              },
+              {
+                "Range": [
+                  177,
+                  181
+                ]
+              },
+              {
+                "Range": [
+                  186,
+                  188
+                ]
+              },
+              {
+                "Single": 190
+              },
+              {
+                "Single": 194
+              },
+              {
+                "Range": [
+                  293,
+                  294
+                ]
+              },
+              {
+                "Range": [
+                  298,
+                  321
+                ]
+              },
+              {
+                "Single": 323
+              },
+              {
+                "Single": 325
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "python/aibrix/aibrix/batch/client/engine.py": [
+      {
+        "hash": "s_cb5d281919c604::t_76095c82f77e07",
+        "line_ranges": [
+          {
+            "Range": [
+              334,
+              335
+            ]
+          },
+          {
+            "Single": 344
+          },
+          {
+            "Single": 346
+          },
+          {
+            "Range": [
+              397,
+              401
+            ]
+          },
+          {
+            "Range": [
+              403,
+              405
+            ]
+          },
+          {
+            "Range": [
+              459,
+              462
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a582f3ec01cf48f5a1c5f2a",
+            "tool_type": "agent",
+            "tool_id": "apply_patch",
+            "line_ranges": [
+              {
+                "Range": [
+                  334,
+                  335
+                ]
+              },
+              {
+                "Single": 344
+              },
+              {
+                "Single": 346
+              },
+              {
+                "Range": [
+                  397,
+                  401
+                ]
+              },
+              {
+                "Range": [
+                  403,
+                  405
+                ]
+              },
+              {
+                "Range": [
+                  459,
+                  462
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "python/aibrix/tests/batch/test_concurrency_controller.py": [
+      {
+        "hash": "s_cb5d281919c604::t_90a087e38d258a",
+        "line_ranges": [
+          {
+            "Range": [
+              25,
+              36
+            ]
+          },
+          {
+            "Range": [
+              38,
+              49
+            ]
+          },
+          {
+            "Range": [
+              51,
+              94
+            ]
+          },
+          {
+            "Range": [
+              144,
+              149
+            ]
+          },
+          {
+            "Range": [
+              154,
+              155
+            ]
+          },
+          {
+            "Single": 175
+          },
+          {
+            "Single": 177
+          },
+          {
+            "Single": 183
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a582f58c01cf48f5a1c5f30",
+            "tool_type": "agent",
+            "tool_id": "apply_patch",
+            "line_ranges": [
+              {
+                "Range": [
+                  25,
+                  36
+                ]
+              },
+              {
+                "Range": [
+                  38,
+                  49
+                ]
+              },
+              {
+                "Range": [
+                  51,
+                  94
+                ]
+              },
+              {
+                "Range": [
+                  144,
+                  149
+                ]
+              },
+              {
+                "Range": [
+                  154,
+                  155
+                ]
+              },
+              {
+                "Single": 175
+              },
+              {
+                "Single": 177
+              },
+              {
+                "Single": 183
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "python/aibrix/tests/batch/test_dispatch_engine.py": [
+      {
+        "hash": "s_cb5d281919c604::t_4d7996dcb4c4d5",
+        "line_ranges": [
+          {
+            "Single": 35
+          },
+          {
+            "Range": [
+              648,
+              680
+            ]
+          },
+          {
+            "Range": [
+              801,
+              817
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a583024c01cf48f5a1c5f4c",
+            "tool_type": "agent",
+            "tool_id": "apply_patch",
+            "line_ranges": [
+              {
+                "Single": 35
+              },
+              {
+                "Range": [
+                  648,
+                  680
+                ]
+              },
+              {
+                "Range": [
+                  801,
+                  817
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "s_cb5d281919c604": {
+      "tool": "trae",
+      "conversation_id": "6a582e81c01cf48f5a1c5ea6",
+      "session_id": "6a582e81c01cf48f5a1c5ea6",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_cb5d281919c604::t_4d7996dcb4c4d5": {
+      "tool": "trae",
+      "conversation_id": "6a582e81c01cf48f5a1c5ea6",
+      "session_id": "6a582e81c01cf48f5a1c5ea6",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_cb5d281919c604::t_76095c82f77e07": {
+      "tool": "trae",
+      "conversation_id": "6a582e81c01cf48f5a1c5ea6",
+      "session_id": "6a582e81c01cf48f5a1c5ea6",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_cb5d281919c604::t_8a154f6e579017": {
+      "tool": "trae",
+      "conversation_id": "6a582e81c01cf48f5a1c5ea6",
+      "session_id": "6a582e81c01cf48f5a1c5ea6",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_cb5d281919c604::t_90a087e38d258a": {
+      "tool": "trae",
+      "conversation_id": "6a582e81c01cf48f5a1c5ea6",
+      "session_id": "6a582e81c01cf48f5a1c5ea6",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}

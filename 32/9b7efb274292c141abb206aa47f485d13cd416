@@ -1,0 +1,31 @@
+python/aibrix/tests/batch/test_dispatch_engine.py
+  s_cb5d281919c604::t_f39a7524dc1b61 818-819
+  s_cb5d281919c604::t_4d7996dcb4c4d5 35,648-680,801,803-813,815-816
+  s_cb5d281919c604::t_4dc3e8f1bf1bef 802,814,817
+python/aibrix/aibrix/batch/client/concurrency.py
+  s_cb5d281919c604::t_c9b8f166f7cbbc 133
+  s_cb5d281919c604::t_8a154f6e579017 87-88,112-113,129-132,134,155-158,165,170-174,179-181,183,187,291-313,315,317
+python/aibrix/aibrix/batch/client/engine.py
+  s_cb5d281919c604::t_76095c82f77e07 451-454
+python/aibrix/tests/batch/test_concurrency_controller.py
+  s_cb5d281919c604::t_c1a50d7e51851b 77,79
+  s_cb5d281919c604::t_90a087e38d258a 25-35,37-47,49-76,78,80-91,141-146,151-152,172,174,180
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "329b7efb274292c141abb206aa47f485d13cd416",
+  "prompts": {},
+  "sessions": {
+    "s_cb5d281919c604": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a582e81c01cf48f5a1c5ea6",
+        "model": "gpt-5.6-sol__max"
+      },
+      "human_author": "chenyu.jiang <chenyu.jiang@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}

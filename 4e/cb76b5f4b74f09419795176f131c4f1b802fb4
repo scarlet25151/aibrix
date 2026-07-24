@@ -1,0 +1,66 @@
+python/aibrix/aibrix/batch/job_driver/runtime/base.py
+  s_c0c5b4de329395::t_1d63c6246673e9 328-329 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a63a616391b05a5ea4aa405","tool_type":"agent","tool_id":"apply_patch","line_ranges":[{"Range":[328,329]}]}]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "4ecb76b5f4b74f09419795176f131c4f1b802fb4",
+  "prompts": {},
+  "sessions": {
+    "s_c0c5b4de329395": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a639c47391b05a5ea4aa182",
+        "model": "gpt-5.5__max"
+      },
+      "human_author": "chenyu.jiang <chenyu.jiang@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {
+    "python/aibrix/aibrix/batch/job_driver/runtime/base.py": [
+      {
+        "hash": "s_c0c5b4de329395::t_1d63c6246673e9",
+        "line_ranges": [
+          {
+            "Range": [
+              328,
+              329
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a63a616391b05a5ea4aa405",
+            "tool_type": "agent",
+            "tool_id": "apply_patch",
+            "line_ranges": [
+              {
+                "Range": [
+                  328,
+                  329
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {
+    "s_c0c5b4de329395": {
+      "tool": "trae",
+      "conversation_id": "6a639c47391b05a5ea4aa182",
+      "session_id": "6a639c47391b05a5ea4aa182",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    },
+    "s_c0c5b4de329395::t_1d63c6246673e9": {
+      "tool": "trae",
+      "conversation_id": "6a639c47391b05a5ea4aa182",
+      "session_id": "6a639c47391b05a5ea4aa182",
+      "status": "remote_only",
+      "message": "Remote transcript resolution is not implemented yet for TRAE prompts."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+python/aibrix/tests/batch/test_job_entity.py
+  h_fe5a435581dd64 238,255,258
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "13f43f71e7bdcda164ab08e573a48e1d3c4da6c2",
+  "prompts": {},
+  "humans": {
+    "h_fe5a435581dd64": {
+      "author": "chenyu.jiang <chenyu.jiang@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {},
+  "remote_transcripts": {}
+}

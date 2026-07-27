@@ -1,0 +1,103 @@
+python/aibrix/tests/batch/test_job_entity.py
+  h_fe5a435581dd64 239,256,259
+  s_c0c5b4de329395::t_8e8aa7363edbce 263-265 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a669a42519908e19f2ff1c8","tool_type":"agent","tool_id":"exec_command","line_ranges":[{"Single":239},{"Single":256},{"Single":259},{"Range":[263,265]}]}]}
+python/aibrix/aibrix/batch/job_entity/aibrix_metadata.py
+  s_c0c5b4de329395::t_8e8aa7363edbce 13,95-96 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a669a42519908e19f2ff1c8","tool_type":"agent","tool_id":"exec_command","line_ranges":[{"Single":13},{"Range":[95,96]}]}]}
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.10",
+  "base_commit_sha": "f1efc5fb66278f3f6a8f646589dd68cf60e6f650",
+  "prompts": {},
+  "humans": {
+    "h_fe5a435581dd64": {
+      "author": "chenyu.jiang <chenyu.jiang@bytedance.com>"
+    }
+  },
+  "sessions": {
+    "s_c0c5b4de329395": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a639c47391b05a5ea4aa182",
+        "model": "gpt-5.6-sol__max"
+      },
+      "human_author": "chenyu.jiang <chenyu.jiang@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {
+    "python/aibrix/aibrix/batch/job_entity/aibrix_metadata.py": [
+      {
+        "hash": "s_c0c5b4de329395::t_8e8aa7363edbce",
+        "line_ranges": [
+          {
+            "Single": 13
+          },
+          {
+            "Range": [
+              95,
+              96
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a669a42519908e19f2ff1c8",
+            "tool_type": "agent",
+            "tool_id": "exec_command",
+            "line_ranges": [
+              {
+                "Single": 13
+              },
+              {
+                "Range": [
+                  95,
+                  96
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "python/aibrix/tests/batch/test_job_entity.py": [
+      {
+        "hash": "s_c0c5b4de329395::t_8e8aa7363edbce",
+        "line_ranges": [
+          {
+            "Range": [
+              263,
+              265
+            ]
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a669a42519908e19f2ff1c8",
+            "tool_type": "agent",
+            "tool_id": "exec_command",
+            "line_ranges": [
+              {
+                "Single": 239
+              },
+              {
+                "Single": 256
+              },
+              {
+                "Single": 259
+              },
+              {
+                "Range": [
+                  263,
+                  265
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "remote_transcripts": {}
+}

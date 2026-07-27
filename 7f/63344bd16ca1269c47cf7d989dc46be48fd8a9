@@ -1,10 +1,88 @@
+apps/console/web/src/components/CreateJob.tsx
+  s_dbc947b7d5d78e::t_b311aff877a95f 39,41,75-76,284-286,296,496 gitai:{"mixed_line_ranges":[],"operations":[{"operation_id":"6a66fa83519908e19f2ff5c3","tool_type":"agent","tool_id":"exec_command","line_ranges":[{"Single":39},{"Single":41},{"Range":[75,76]},{"Range":[284,286]},{"Single":296},{"Single":496}]}]}
 ---
 {
   "schema_version": "authorship/3.0.0",
   "git_ai_version": "1.6.10",
   "base_commit_sha": "7f63344bd16ca1269c47cf7d989dc46be48fd8a9",
   "prompts": {},
-  "attestation_metadata": {},
+  "sessions": {
+    "s_dbc947b7d5d78e": {
+      "agent_id": {
+        "tool": "trae",
+        "id": "6a664657519908e19f2feedb",
+        "model": "gpt-5.6-sol__max"
+      },
+      "human_author": "chenyu.jiang <chenyu.jiang@bytedance.com>"
+    }
+  },
+  "attestation_metadata": {
+    "apps/console/web/src/components/CreateJob.tsx": [
+      {
+        "hash": "s_dbc947b7d5d78e::t_b311aff877a95f",
+        "line_ranges": [
+          {
+            "Single": 39
+          },
+          {
+            "Single": 41
+          },
+          {
+            "Range": [
+              75,
+              76
+            ]
+          },
+          {
+            "Range": [
+              284,
+              286
+            ]
+          },
+          {
+            "Single": 296
+          },
+          {
+            "Single": 496
+          }
+        ],
+        "mixed_line_ranges": [],
+        "operations": [
+          {
+            "operation_id": "6a66fa83519908e19f2ff5c3",
+            "tool_type": "agent",
+            "tool_id": "exec_command",
+            "line_ranges": [
+              {
+                "Single": 39
+              },
+              {
+                "Single": 41
+              },
+              {
+                "Range": [
+                  75,
+                  76
+                ]
+              },
+              {
+                "Range": [
+                  284,
+                  286
+                ]
+              },
+              {
+                "Single": 296
+              },
+              {
+                "Single": 496
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
   "remote_transcripts": {
     "s_dbc947b7d5d78e": {
       "tool": "trae",

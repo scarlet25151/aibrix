@@ -12,11 +12,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+import asyncio
+import json
 import uuid
-from typing import Any, AsyncIterator, Dict, List, Optional, Tuple
+from typing import Any, AsyncIterator, BinaryIO, Dict, List, Optional, Tuple
 
-from aibrix.batch.job_entity import BatchJob
+from aibrix.batch.job_entity import BatchJob, BatchJobEndpoint
 from aibrix.batch.storage.adapter import BatchStorageAdapter
+from aibrix.batch.storage.batch_metastore import (
+    delete_metadata,
+    get_metadata,
+    list_metastore_all_keys,
+    set_metadata,
+)
 from aibrix.batch.storage.input_validation import validate_batch_input_file
 from aibrix.logger import init_logger
 from aibrix.storage import StorageType, create_storage
@@ -185,7 +193,62 @@ async def write_job_output_data(
         raise RuntimeError(
             "Batch storage not initialized. Call initialize_batch_storage() first."
         )
-    await p_storage.write_job_output_data(job, request_index, output_data)
+    if job.spec.endpoint == BatchJobEndpoint.VIDEOS.value:
+        await asyncio.wait_for(
+            p_storage.write_job_output_data(job, request_index, output_data),
+            timeout=30.0,
+        )
+        await _clear_video_execution(_video_execution_key(job.job_id, request_index))
+    else:
+        await p_storage.write_job_output_data(job, request_index, output_data)
+
+
+def _video_execution_key(job_id: str, request_index: Optional[int] = None) -> str:
+    prefix = f"batch/{job_id}/video/"
+    return prefix if request_index is None else f"{prefix}{request_index}"
+
+
+async def load_video_execution(job_id: str, request_index: int) -> Dict[str, Any]:
+    data, exists = await get_metadata(_video_execution_key(job_id, request_index))
+    return json.loads(data) if exists else {}
+
+
+async def save_video_execution(
+    job_id: str, request_index: int, handle: Dict[str, Any]
+) -> None:
+    await set_metadata(_video_execution_key(job_id, request_index), json.dumps(handle))
+
+
+async def _clear_video_execution(key: str) -> None:
+    try:
+        await asyncio.wait_for(delete_metadata(key), timeout=5.0)
+    except FileNotFoundError:
+        pass
+    except Exception as exc:
+        # The row is already committed. Cleanup must not make it retryable.
+        logger.warning("Could not remove video execution record %s: %r", key, exc)
+
+
+async def write_video_output(
+    job_id: str, request_index: int, content: BinaryIO, content_type: str
+) -> str:
+    if p_storage is None:
+        raise RuntimeError(
+            "Batch storage not initialized. Call initialize_batch_storage() first."
+        )
+    file_id = (
+        "file-"
+        + uuid.uuid5(
+            uuid.NAMESPACE_URL, f"aibrix:batch:{job_id}:video:{request_index}"
+        ).hex
+    )
+    await p_storage.storage.put_object(
+        file_id,
+        content,
+        content_type,
+        metadata={"purpose": "batch_output", "filename": f"{file_id}.mp4"},
+    )
+    return file_id
 
 
 async def finalize_job_output_data(job: BatchJob) -> BatchJob:
@@ -199,6 +262,9 @@ async def finalize_job_output_data(job: BatchJob) -> BatchJob:
             "Batch storage not initialized. Call initialize_batch_storage() first."
         )
     job = await p_storage.finalize_job_output_data(job)
+    if job.spec.endpoint == BatchJobEndpoint.VIDEOS.value:
+        for key in await list_metastore_all_keys(_video_execution_key(job.job_id)):
+            await _clear_video_execution(key)
     return job
 
 

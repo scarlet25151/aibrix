@@ -2,6 +2,76 @@
 
 This directory contains the batch processing system for AIBrix, designed to handle large-scale batch inference jobs using a sidecar pattern with vLLM.
 
+## Asynchronous video batches
+
+Create a Batch with `endpoint: "/v1/videos"` and POST rows in the usual JSONL
+envelope. The first supported wire protocol is vLLM-Omni's Videos API:
+
+```jsonl
+{"custom_id":"video-001","method":"POST","url":"/v1/videos","body":{"model":"minimax-h3","prompt":"Continue the motion shown in the reference clip.","video_reference":{"video_url":"https://media.example.com/reference.mp4"},"num_inference_steps":50,"flow_shift":12.0,"extra_params":{"task":"ref2va","duration":4.0,"audio_flow_shift":3.0}}}
+```
+
+Replace the example URL with a backend-accessible reference. Images use
+`image_reference.image_url`. Reference objects/lists and `extra_params` are
+vLLM-Omni extensions and must match the deployed engine version. Scalars become
+text form fields; objects and lists become JSON form fields in a multipart
+request. Null fields are omitted. Uploaded file IDs and worker-local paths are
+not resolved into binary uploads. Existing chat `messages` are not converted:
+the dataset must explicitly provide the Videos prompt and media fields.
+
+The execution pipeline is:
+
+```text
+MDS input validation
+  -> driver reads and locks a row
+  -> DispatchEngine admits the row and selects a channel
+  -> POST /v1/videos and save its ID/destination/deadline
+  -> GET /v1/videos/{id} until completed or failed
+  -> stream GET /v1/videos/{id}/content to a temporary file
+  -> persist the video to Files storage
+  -> write result/error JSONL and update request counts
+  -> release the concurrency slot
+```
+
+A successful result preserves the final Video metadata and adds
+`response.body.output_file_id`. Download that file with
+`GET /v1/files/{output_file_id}/content`. The Batch object's top-level
+`output_file_id` still identifies the result JSONL. Video files use deterministic
+IDs, remain available after the engine exits, and follow existing Files deletion
+behavior. Temporary downloads are removed after persistence.
+
+Use `extra_body.aibrix.client.max_concurrency` to bound active video rows and
+`extra_body.aibrix.client.request_timeout_seconds` for their total execution
+budget (creation, polling, download, and video persistence). The default is
+`INFERENCE_TASK_TIMEOUT`; the Batch expiration also caps this budget. Polling
+does not extend it. Result writing has a separate 30-second bound; the processing
+lock reserves an additional minute for bounded cancellation and result cleanup.
+Explicit cancellation or timeout attempts a DELETE for at most five seconds.
+Ordinary worker interruption preserves the execution handle for resumption.
+
+Status/content retries use `client.retry_policy` against the saved destination.
+Creation retries are allowed for connection/pool failures before submission and
+HTTP 429. An ambiguous creation timeout or server error never triggers automatic
+POST replay. A submission marker is saved before POST: recovery without a saved
+ID reports an unknown outcome, including a crash between that marker and POST.
+This is conservative recovery, not an exactly-once submission guarantee.
+After the ID is saved, recovery resumes the same job. A saved final response
+allows result-write retries without downloading or generating again.
+
+Gateway connections reuse the gateway's public video ID and owning-Pod routing.
+Direct connections must identify the original backend (for example, Pod
+endpoints from EndpointSlice discovery); a multi-replica ClusterIP cannot
+guarantee this. The worker does not regenerate jobs whose owner or ID is gone.
+
+Video rows use fixed admission limits even if LLM adaptive concurrency is
+enabled. Polling yields to other admitted rows every two seconds. The existing
+injectable `ConcurrencyController` remains the extension point for future
+video-specific admission based on queueing, latency, throughput, and GPU
+measurements. HTTP concurrency alone does not imply improved SMA utilization;
+backend overlap requires measurement. Dry-run only echoes request construction.
+
+Design: [RFC #3247](https://github.com/vllm-project/aibrix/issues/3247).
+
 ## Architecture Overview
 
 The batch processing system consists of several key components:

@@ -15,6 +15,7 @@ ENDPOINT_REQUIRED_BODY_FIELDS: dict[str, list[str]] = {
     BatchJobEndpoint.COMPLETIONS.value: ["model", "prompt"],
     BatchJobEndpoint.EMBEDDINGS.value: ["model", "input"],
     BatchJobEndpoint.RERANK.value: ["model", "query", "documents"],
+    BatchJobEndpoint.VIDEOS.value: ["model", "prompt"],
 }
 
 
@@ -48,6 +49,11 @@ def validate_request_body_for_endpoint(
             return f"Line {line_num}: 'query' must be a string for {endpoint}"
         if not isinstance(body.get("documents"), list):
             return f"Line {line_num}: 'documents' must be a list for {endpoint}"
+    elif endpoint == BatchJobEndpoint.VIDEOS.value:
+        if not isinstance(body.get("model"), str) or not body["model"]:
+            return f"Line {line_num}: 'model' must be a non-empty string for {endpoint}"
+        if not isinstance(body.get("prompt"), str):
+            return f"Line {line_num}: 'prompt' must be a string for {endpoint}"
 
     return None
 
@@ -100,6 +106,12 @@ async def validate_batch_input_file(
                     0,
                     f"Line {line_num}: Invalid HTTP method '{request['method']}'",
                 )
+
+            if (
+                endpoint == BatchJobEndpoint.VIDEOS.value
+                and request["method"].upper() != "POST"
+            ):
+                return 0, f"Line {line_num}: {endpoint} requires POST"
 
             request_url = request["url"]
             if endpoint and not request_url.endswith(endpoint):

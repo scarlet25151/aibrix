@@ -38,10 +38,12 @@ import os
 import time
 import uuid
 from datetime import datetime, timezone
+from functools import partial
 from math import isfinite
 from typing import Any, Dict, Iterable, Optional, Set, Tuple
 
 import aibrix.batch.storage as storage
+from aibrix import envs
 from aibrix.batch.client import (
     DispatchEngine,
     DispatchStats,
@@ -54,6 +56,7 @@ from aibrix.batch.client.concurrency import (
     DEFAULT_ADAPTIVE_ADDITIVE_INCREASE,
     DEFAULT_ADAPTIVE_HEALTHY_WINDOW,
 )
+from aibrix.batch.client.video import VideoExecutionContext, VideoPersistenceError
 from aibrix.batch.job_driver.driver import TerminateResult
 from aibrix.batch.job_driver.error_injection import (
     ACTION_INTERRUPT_RUNTIME,
@@ -81,6 +84,11 @@ from aibrix.batch.job_entity import (
     ensure_batch_job_error,
 )
 from aibrix.batch.metrics import tags_from_job
+from aibrix.batch.storage.batch_storage import (
+    load_video_execution,
+    save_video_execution,
+    write_video_output,
+)
 from aibrix.context.infra import InfrastructureContext
 from aibrix.logger import init_logger
 from aibrix.metadata.core.metrics import Emitter, T, metrics_names
@@ -1020,6 +1028,8 @@ class BaseJobDriver:
             if client is not None and client.adaptive_concurrency is not None
             else True
         )
+        if job.spec.endpoint == BatchJobEndpoint.VIDEOS.value:
+            adaptive = False
         adaptive_max_factor = (
             client.adaptive_max_factor
             if client is not None and client.adaptive_max_factor is not None
@@ -1141,9 +1151,16 @@ class BaseJobDriver:
                     line=input_line_no,
                 )
 
+            send_kwargs = {}
+            if job.spec.endpoint == BatchJobEndpoint.VIDEOS.value:
+                send_kwargs["video"] = self._video_context(job, request_id)
             request_output, last_error = await self._send_one(
-                job.spec.endpoint, request_input["body"], request_id
+                job.spec.endpoint, request_input["body"], request_id, **send_kwargs
             )
+            if self._defer_video_persistence_error(
+                job.job_id, request_id, custom_id, last_error
+            ):
+                return request_id, None
 
             if last_error is None and isinstance(request_output, dict):
                 emitted_usage = self._accumulate_usage(
@@ -1544,6 +1561,7 @@ class BaseJobDriver:
                         path=job.spec.endpoint,
                         payload=payload,
                         ref=(request_id, custom_id, input_line_data),
+                        video=self._video_context(job, request_id),
                     )
 
                 await round_drained.wait()
@@ -1614,6 +1632,13 @@ class BaseJobDriver:
             request_id, custom_id, input_line_data = request.ref
             input_line_no = request_id
             try:
+                if self._defer_video_persistence_error(
+                    job_id, request_id, custom_id, error
+                ):
+                    pending_in_round = max(0, pending_in_round - 1)
+                    if pending_in_round == 0:
+                        round_drained.set()
+                    return
                 if error is None and isinstance(response, dict):
                     async with self._usage_lock:
                         self._accumulate_usage(job_id, custom_id, response.get("usage"))
@@ -1759,15 +1784,66 @@ class BaseJobDriver:
             p95_latency_seconds=_round_optional(snapshot.p95_latency_seconds),
         )  # type: ignore[call-arg]
 
+    def _video_context(
+        self, job: BatchJob, request_id: int
+    ) -> Optional[VideoExecutionContext]:
+        if job.spec.endpoint != BatchJobEndpoint.VIDEOS.value:
+            return None
+        client = job.spec.aibrix.client if job.spec.aibrix else None
+        timeout = (
+            client.request_timeout_seconds
+            if client is not None and client.request_timeout_seconds is not None
+            else envs.INFERENCE_TASK_TIMEOUT
+        )
+
+        async def cancelled() -> bool:
+            current, stopped = await self._is_job_stopped(job.job_id)
+            return stopped or current.is_expiring()
+
+        return VideoExecutionContext(
+            deadline=min(time.time() + float(timeout), job.expiration_timestamp()),
+            load=partial(load_video_execution, job.job_id, request_id),
+            save=partial(save_video_execution, job.job_id, request_id),
+            persist=partial(write_video_output, job.job_id, request_id),
+            cancelled=cancelled,
+            retry=self._retry_config_for_job(job),
+        )
+
+    def _defer_video_persistence_error(
+        self,
+        job_id: str,
+        request_id: int,
+        custom_id: str,
+        error: Optional[Exception],
+    ) -> bool:
+        if not isinstance(error, VideoPersistenceError):
+            return False
+        if self._should_defer_output_persistence_failure(
+            job_id=job_id,
+            request_id=request_id,
+            custom_id=custom_id,
+            error=error,
+        ):
+            return True
+        raise error
+
     async def _send_one(
-        self, endpoint: str, body: Dict[str, Any], request_id: int
+        self,
+        endpoint: str,
+        body: Dict[str, Any],
+        request_id: int,
+        *,
+        video: Optional[VideoExecutionContext] = None,
     ) -> tuple[Any, Optional[Exception]]:
         """Serial fallback adapter around DispatchEngine.send_one."""
         assert self._engine is not None  # guaranteed by execute_worker
         try:
             output = await self._engine.send_one(
                 InferenceRequest(
-                    path=endpoint, payload=self._shape_payload(body), ref=request_id
+                    path=endpoint,
+                    payload=self._shape_payload(body),
+                    ref=request_id,
+                    video=video,
                 )
             )
             return output, None
@@ -1895,10 +1971,10 @@ class BaseJobDriver:
         request_payload: Optional[Dict[str, Any]] = None,
     ) -> dict[str, Any]:
         response: dict[str, Any] = {
+            "custom_id": custom_id,
             "id": uuid.uuid4().hex[:5],
             "error": None,
             "response": None,
-            "custom_id": custom_id,
         }
 
         if error is not None:

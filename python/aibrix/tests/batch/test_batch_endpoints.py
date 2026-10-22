@@ -101,12 +101,13 @@ def test_rerank_endpoint_supported():
 
 
 def test_all_supported_endpoints():
-    """Test that all four OpenAI-compatible endpoints are supported."""
+    """Test that all supported Batch endpoints are accepted."""
     supported_endpoints = [
         "/v1/chat/completions",
         "/v1/completions",
         "/v1/embeddings",
         "/v1/rerank",
+        "/v1/videos",
     ]
 
     for endpoint in supported_endpoints:
@@ -138,9 +139,9 @@ def test_endpoint_enum_values():
 
 
 def test_endpoint_count():
-    """Test that we have exactly 4 supported endpoints."""
+    """Test that we have exactly 5 supported endpoints."""
     endpoints = list(BatchJobEndpoint)
-    assert len(endpoints) == 4
+    assert len(endpoints) == 5
 
 
 # ---- Endpoint-specific body validation tests ----
@@ -761,8 +762,9 @@ def test_get_batch_response_omits_none_fields_from_json(monkeypatch):
                 "documents": ["doc1"],
             },
         ),
+        ("/v1/videos", {"model": "minimax-h3", "prompt": "A moving camera"}),
     ],
-    ids=["chat_completions", "completions", "embeddings", "rerank"],
+    ids=["chat_completions", "completions", "embeddings", "rerank", "videos"],
 )
 def test_all_endpoints_accept_valid_bodies(endpoint, body):
     """Parametrized test: all endpoints accept their valid bodies."""

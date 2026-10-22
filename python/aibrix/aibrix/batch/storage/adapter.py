@@ -20,7 +20,12 @@ import uuid
 from typing import Any, AsyncIterator, Dict, List, Optional, Tuple, cast
 
 from aibrix import envs
-from aibrix.batch.job_entity import BatchJob, BatchJobError, BatchJobErrorCode
+from aibrix.batch.job_entity import (
+    BatchJob,
+    BatchJobEndpoint,
+    BatchJobError,
+    BatchJobErrorCode,
+)
 from aibrix.batch.job_entity.batch_job import BatchUsage
 from aibrix.batch.storage.batch_metastore import (
     METASTORE_LIST_PAGE_SIZE,
@@ -65,9 +70,13 @@ class BatchStorageAdapter:
         timeout_seconds = int(envs.INFERENCE_TASK_TIMEOUT)
         client = job.spec.aibrix.client if job.spec.aibrix else None
         request_timeout_seconds = getattr(client, "request_timeout_seconds", None)
-        if request_timeout_seconds is None:
-            return timeout_seconds
-        return max(1, math.ceil(float(request_timeout_seconds)))
+        if request_timeout_seconds is not None:
+            timeout_seconds = max(1, math.ceil(float(request_timeout_seconds)))
+        if job.spec.endpoint == BatchJobEndpoint.VIDEOS.value:
+            # Cover bounded handle loading, DELETE, result commit and cleanup
+            # after the video execution deadline, before another worker locks it.
+            timeout_seconds += 60
+        return timeout_seconds
 
     async def write_job_input_data(
         self, file_id: str, input_data_file_name: str

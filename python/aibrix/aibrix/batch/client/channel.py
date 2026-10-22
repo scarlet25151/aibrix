@@ -22,7 +22,7 @@ from __future__ import annotations
 
 import asyncio
 from dataclasses import dataclass
-from typing import Any, Dict, Optional, Protocol, runtime_checkable
+from typing import TYPE_CHECKING, Any, Dict, Optional, Protocol, runtime_checkable
 from urllib.parse import urljoin
 
 import httpx
@@ -30,6 +30,9 @@ import httpx
 from aibrix.batch.client.errors import InferenceError, InferenceErrorCode
 from aibrix.logger import init_logger
 from aibrix.metadata.core import HTTPXClientWrapper
+
+if TYPE_CHECKING:
+    from aibrix.batch.client.video import VideoExecutionContext
 
 logger = init_logger(__name__)
 
@@ -66,6 +69,7 @@ class InferenceRequest:
     path: str
     payload: Dict[str, Any]
     ref: Any = None
+    video: Optional[VideoExecutionContext] = None
 
 
 @runtime_checkable
@@ -107,6 +111,18 @@ class HttpChannel:
 
     async def send(self, request: InferenceRequest) -> Response:
         client = self._ensure_client()
+        if request.path == "/v1/videos":
+            from aibrix.batch.client.video import VideoExecutor
+
+            if request.video is None:
+                raise InferenceError(
+                    InferenceErrorCode.RESPONSE_ERROR,
+                    "Video requests require an execution context",
+                    retryable=False,
+                )
+            return await VideoExecutor(
+                client, request.video, self._timeout_config
+            ).send(self._base_url, request.payload)
         url = urljoin(self._base_url, request.path)
         logger.debug(
             "requesting inference", url=url, model=request.payload.get("model")
